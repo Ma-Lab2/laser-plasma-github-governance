@@ -11,6 +11,10 @@ Run a read-only audit across all repositories in an organization and produce mac
 
 ## Workflow
 
+0. Ensure onboarding environment is ready:
+```bash
+./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance
+```
 1. Export a GitHub token with org repository read permission:
 ```bash
 export GH_TOKEN=<token>
@@ -53,3 +57,5 @@ Use `scripts/check-platform-policy.py` to validate repository-level GitHub setti
 ## References
 
 - Audit policy and interpretation: `references/audit-policy.md`
+- Onboarding entry: `docs/onboarding/00-start-here.md`
+- AI client usage: `docs/onboarding/30-ai-agents.md`
