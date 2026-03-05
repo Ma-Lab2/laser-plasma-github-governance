@@ -134,18 +134,32 @@ def main() -> int:
     elif status == 404:
         add_finding(
             findings,
-            "blocker",
+            "warning",
             "branch_protection_not_enabled",
-            f"Branch protection is not enabled for default branch {default_branch}",
+            (
+                f"Branch protection is not enabled for default branch {default_branch}. "
+                "Treat as warning in current governance mode."
+            ),
         )
     else:
         msg = protection_payload.get("message", "unknown error")
-        add_finding(
-            findings,
-            "blocker",
-            "branch_protection_unreadable",
-            f"Unable to read branch protection ({status}): {msg}",
-        )
+        msg_lower = str(msg).lower()
+        # Some repositories cannot enable branch protection due to plan limits.
+        # Treat this as a warning so governance adoption is not hard-blocked.
+        if status == 403 and "upgrade to github pro" in msg_lower and "make this repository public" in msg_lower:
+            add_finding(
+                findings,
+                "warning",
+                "branch_protection_feature_unavailable",
+                f"Branch protection feature unavailable for repository plan ({status}): {msg}",
+            )
+        else:
+            add_finding(
+                findings,
+                "blocker",
+                "branch_protection_unreadable",
+                f"Unable to read branch protection ({status}): {msg}",
+            )
 
     payload = {"repo": args.repo, "platform": platform, "summary": summarize(findings), "findings": findings}
     if args.output == "json":
