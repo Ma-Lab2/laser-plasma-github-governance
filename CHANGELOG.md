@@ -7,7 +7,24 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 ## [Unreleased]
 
 ### Added
-- [TODO] Describe upcoming changes.
+- Human-friendly onboarding docs:
+  - `docs/onboarding/00-start-here.md`
+  - `docs/onboarding/10-member-path.md`
+  - `docs/onboarding/20-admin-path.md`
+  - `docs/onboarding/30-ai-agents.md`
+  - `docs/onboarding/40-faq.md`
+- `scripts/onboarding-check.sh` for environment and access self-check.
+- `skills/governance-audit` skill package (audit workflow, policy reference, platform checker).
+- Weekly organization audit workflow: `.github/workflows/org-governance-audit-weekly.yml`.
+- Audit skill installer: `scripts/install-governance-audit-skill.sh`.
+
+### Changed
+- `run-org-audit.sh` git authentication uses non-interactive basic token flow to avoid credential popup loops.
+- Platform policy checker now treats `branch_protection_not_enabled` as warning in current governance mode.
+
+### Verified
+- Final gate test suite executed on 2026-03-05 and archived in:
+  - `docs/testing/final-gate-20260305.md`
 
 ## [0.2.1] - 2026-03-05
 
