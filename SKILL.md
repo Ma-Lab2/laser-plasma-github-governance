@@ -66,6 +66,8 @@ git push origin v0.1.0
 - `scripts/update-skill-lock.py`
 - `scripts/apply-governance-template.sh <target-repo> [skill-version]`
 - `scripts/audit-org-repos.sh`
+- `scripts/install-governance-audit-skill.sh`
+- `skills/governance-audit/scripts/run-org-audit.sh`
 
 ## References
 

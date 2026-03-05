@@ -48,5 +48,25 @@ python3 .governance/validate-governance.py --mode local --required-skill-version
 ## Organization Audit
 
 ```bash
-./scripts/audit-org-repos.sh --org Ma-Lab2
+./skills/governance-audit/scripts/run-org-audit.sh --org Ma-Lab2
 ```
+
+## Install Audit Skill Globally
+
+```bash
+./scripts/install-governance-audit-skill.sh
+```
+
+This installs `governance-audit` into:
+
+- `${CODEX_HOME:-$HOME/.codex}/skills/governance-audit`
+
+Use in agent prompt:
+
+- `$governance-audit`
+
+## Weekly Organization Audit Workflow
+
+- Workflow file: `.github/workflows/org-governance-audit-weekly.yml`
+- Trigger: every Monday (UTC) + manual `workflow_dispatch`
+- Required secret: `MA_LAB2_AUDIT_TOKEN`
