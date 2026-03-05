@@ -2,6 +2,22 @@
 
 Governance skill for Ma-Lab2 repositories.
 
+## Start Here
+
+New members and admins should start from the onboarding guide:
+
+- `docs/onboarding/00-start-here.md`
+- Member path: `docs/onboarding/10-member-path.md`
+- Admin path: `docs/onboarding/20-admin-path.md`
+- AI clients path: `docs/onboarding/30-ai-agents.md`
+- FAQ: `docs/onboarding/40-faq.md`
+
+Run onboarding self-check:
+
+```bash
+./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance
+```
+
 ## What This Repository Provides
 
 - Governance template: `assets/repo-template/`
@@ -48,5 +64,25 @@ python3 .governance/validate-governance.py --mode local --required-skill-version
 ## Organization Audit
 
 ```bash
-./scripts/audit-org-repos.sh --org Ma-Lab2
+./skills/governance-audit/scripts/run-org-audit.sh --org Ma-Lab2
 ```
+
+## Install Audit Skill Globally
+
+```bash
+./scripts/install-governance-audit-skill.sh
+```
+
+This installs `governance-audit` into:
+
+- `${CODEX_HOME:-$HOME/.codex}/skills/governance-audit`
+
+Use in agent prompt:
+
+- `$governance-audit`
+
+## Weekly Organization Audit Workflow
+
+- Workflow file: `.github/workflows/org-governance-audit-weekly.yml`
+- Trigger: every Monday (UTC) + manual `workflow_dispatch`
+- Required secret: `MA_LAB2_AUDIT_TOKEN`

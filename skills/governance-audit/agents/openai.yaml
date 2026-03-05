@@ -1,0 +1,4 @@
+interface:
+  display_name: "Governance Audit"
+  short_description: "Audit organization repos for governance compliance"
+  default_prompt: "Run a read-only organization governance audit and report blockers for missing skill installation, version policy, and branch protection checks."

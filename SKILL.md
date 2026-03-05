@@ -17,6 +17,11 @@ Use this skill to enforce a repository governance baseline for a laser-plasma re
 4. Require commit trailers (`Base-Version`, optionally `Target-Version`).
 5. Require lock-based skill installation checks (`skill.lock.json`, `manifest.sha256`).
 6. Require AI-agent disclosure and human-review confirmation in every PR.
+7. Use onboarding guides for role-specific setup and execution:
+   - `docs/onboarding/00-start-here.md`
+   - `docs/onboarding/10-member-path.md`
+   - `docs/onboarding/20-admin-path.md`
+   - `docs/onboarding/30-ai-agents.md`
 
 ## Mandatory Governance Rules
 
@@ -66,6 +71,9 @@ git push origin v0.1.0
 - `scripts/update-skill-lock.py`
 - `scripts/apply-governance-template.sh <target-repo> [skill-version]`
 - `scripts/audit-org-repos.sh`
+- `scripts/install-governance-audit-skill.sh`
+- `scripts/onboarding-check.sh`
+- `skills/governance-audit/scripts/run-org-audit.sh`
 
 ## References
 

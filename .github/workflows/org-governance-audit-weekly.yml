@@ -1,0 +1,42 @@
+name: Organization Governance Audit Weekly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * 1"
+
+jobs:
+  org_audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run organization governance audit
+        env:
+          MA_LAB2_AUDIT_TOKEN: ${{ secrets.MA_LAB2_AUDIT_TOKEN }}
+        run: |
+          set -euo pipefail
+          chmod +x skills/governance-audit/scripts/run-org-audit.sh
+          chmod +x scripts/validate-governance.py
+          skills/governance-audit/scripts/run-org-audit.sh \
+            --org Ma-Lab2 \
+            --required-skill-version 0.2.1 \
+            --token-env MA_LAB2_AUDIT_TOKEN \
+            --out "$RUNNER_TEMP/org-governance-audit"
+
+      - name: Upload audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: org-governance-audit-report
+          path: |
+            ${{ runner.temp }}/org-governance-audit/report.md
+            ${{ runner.temp }}/org-governance-audit/report.json
+            ${{ runner.temp }}/org-governance-audit/results/
