@@ -1,0 +1,56 @@
+name: Governance Check
+
+on:
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  validate-pr-fields:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate PR template fields
+        id: pr_fields
+        shell: bash
+        run: |
+          set -euo pipefail
+          body="$(jq -r '.pull_request.body // ""' "$GITHUB_EVENT_PATH")"
+
+          if ! grep -Eq 'Base-Version:\s*v[0-9]+\.[0-9]+\.[0-9]+' <<< "$body"; then
+            echo "Missing or invalid Base-Version in PR body"
+            exit 1
+          fi
+
+          if ! grep -Eq 'Change-Type:\s*(breaking|feature|fix|docs|chore|release)' <<< "$body"; then
+            echo "Missing or invalid Change-Type in PR body"
+            exit 1
+          fi
+
+          if ! grep -Eq 'Target-Version:\s*(v[0-9]+\.[0-9]+\.[0-9]+|N/A)' <<< "$body"; then
+            echo "Missing or invalid Target-Version in PR body"
+            exit 1
+          fi
+
+  validate-version:
+    runs-on: ubuntu-latest
+    needs: [validate-pr-fields]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate governance policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .governance/validate-governance.py \
+            --mode ci \
+            --base-ref "${{ github.event.pull_request.base.sha }}" \
+            --head-ref "${{ github.event.pull_request.head.sha }}"
