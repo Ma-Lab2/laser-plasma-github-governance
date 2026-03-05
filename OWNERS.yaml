@@ -1,0 +1,11 @@
+project: laser-plasma-github-governance
+maintainers:
+  - github: @zxc123aa
+    role: lead
+    backup_for: @ma-lab2-maintainer
+  - github: @ma-lab2-maintainer
+    role: co-maintainer
+    backup_for: @zxc123aa
+handover:
+  required_min_maintainers: 2
+  graduation_notice_days: 30

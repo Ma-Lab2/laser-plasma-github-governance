@@ -23,6 +23,12 @@ pre-commit install
 pre-commit install --hook-type commit-msg
 ```
 
+After updating governance files, refresh lock metadata:
+
+```bash
+python3 .governance/update-skill-lock.py --skill-version 0.2.0
+```
+
 ## Release Workflow
 
 ```bash
@@ -42,6 +48,9 @@ git push origin v1.2.4
 CI blocks merge when:
 
 - required governance files are missing
+- `.governance/skill.lock.json` missing or invalid
+- `.governance/manifest.sha256` hash checks fail
+- installed governance skill version is below required minimum
 - `VERSION` format is invalid
 - `VERSION` changed without `CHANGELOG.md`
 - commits lack `Base-Version`

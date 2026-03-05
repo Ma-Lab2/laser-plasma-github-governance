@@ -16,7 +16,6 @@ jobs:
           fetch-depth: 0
 
       - name: Validate PR template fields
-        id: pr_fields
         shell: bash
         run: |
           set -euo pipefail

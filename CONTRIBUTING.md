@@ -7,17 +7,18 @@
 - Include `Base-Version` trailer in every commit message.
 - Use SemVer in `VERSION` and matching tags.
 
-## Start Work from a Version Tag
+## Development Baseline
+
+For feature work in governed repositories, start from an explicit tag:
 
 ```bash
-git fetch --tags --prune
-./.governance/start-from-tag.sh v0.1.0 feature/your-change
+scripts/start-from-tag.sh v0.1.0 feature/your-change
 ```
 
 ## Commit Message Example
 
 ```text
-feat: add diagnostic parser
+feat: improve audit output
 
 Base-Version: v0.1.0
 ```
@@ -33,7 +34,7 @@ python3 .governance/update-skill-lock.py --skill-version 0.2.0
 ## Release Commit
 
 ```bash
-./.governance/prepare-release.sh patch v0.1.0
+scripts/prepare-release.sh patch v0.1.0
 ```
 
 ## Pull Request Requirements

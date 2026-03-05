@@ -17,6 +17,7 @@ Use this skill to build and enforce a repository governance baseline for a laser
 4. Require each commit message to include `Base-Version: vMAJOR.MINOR.PATCH`.
 5. Require release PRs to include `Target-Version: vMAJOR.MINOR.PATCH` and keep `VERSION` aligned with `CHANGELOG.md`.
 6. Enforce at least two maintainers and graduation handover rules via `OWNERS.yaml` and `docs/HANDOVER.md`.
+7. Enforce machine-verifiable skill installation with `.governance/skill.lock.json` and `.governance/manifest.sha256`.
 
 ## Mandatory Governance Rules
 
@@ -26,23 +27,28 @@ Use this skill to build and enforce a repository governance baseline for a laser
 - Require at least one maintainer approval before merge.
 - Require pull by explicit version tag baseline.
 - Require each project to keep at least two maintainers.
+- Require each project to pass skill installation checks (skill version + hash integrity).
 
 ## Execution Checklist
 
 1. Copy `assets/repo-template/` into the target repository root.
 2. Update placeholders in `OWNERS.yaml`, `CODEOWNERS`, and `CONTRIBUTING.md`.
-3. Install local hooks:
+3. Refresh governance lock and manifest:
+```bash
+python3 .governance/update-skill-lock.py --skill-version 0.2.0
+```
+4. Install local hooks:
 ```bash
 pre-commit install
 pre-commit install --hook-type commit-msg
 ```
-4. Add branch protections:
+5. Add branch protections:
 - Require PR before merging
 - Require at least 1 approval
 - Require checks:
   - `governance/validate-version`
   - `governance/validate-pr-fields`
-5. Create initial baseline tag:
+6. Create initial baseline tag:
 ```bash
 git tag v0.1.0
 git push origin v0.1.0
@@ -52,7 +58,10 @@ git push origin v0.1.0
 
 - `scripts/start-from-tag.sh <tag> [branch-name]`: create a clean work branch from a required tag baseline.
 - `scripts/prepare-release.sh <major|minor|patch> <base-tag>`: bump `VERSION`, append `CHANGELOG`, and create a release commit with required trailers.
-- `scripts/validate-governance.py`: validate required files, semantic version format, changelog coupling, maintainer minimums, commit trailers, and tag alignment.
+- `scripts/validate-governance.py`: validate governance files, versioning, commit trailers, placeholder replacement, and skill installation lock/hash integrity.
+- `scripts/update-skill-lock.py`: update `.governance/skill.lock.json` and `.governance/manifest.sha256`.
+- `scripts/apply-governance-template.sh <target-repo> [skill-version]`: apply template and refresh skill lock files in one step.
+- `scripts/audit-org-repos.sh`: organization-wide audit report including skill installation status.
 - `scripts/check-commit-trailer.sh <commit-msg-file>`: commit-msg hook for `Base-Version` trailer enforcement.
 
 ## References

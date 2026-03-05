@@ -1,0 +1,8 @@
+{
+  "skill_name": "laser-plasma-github-governance",
+  "skill_version": "0.2.0",
+  "skill_repo": "https://github.com/Ma-Lab2/laser-plasma-github-governance.git",
+  "installed_at": "2026-03-05T05:32:35Z",
+  "validator_sha256": "8517afb9e9d4eede72b874c7a5839f0ab6c97fd46a14fdc35a69fbbe3d06ed78",
+  "template_sha256": "f9a683d060fcaba12dfbf014a19a0f42741609bfce8608f3ab0e53ecad8316a7"
+}
