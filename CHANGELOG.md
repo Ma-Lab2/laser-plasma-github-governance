@@ -9,6 +9,16 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 ### Added
 - [TODO] Describe upcoming changes.
 
+## [0.2.1] - 2026-03-05
+
+### Added
+- Mandatory AI-agent disclosure fields in PR templates.
+- CI enforcement for `AI-Agent`, `AI-Assistance`, and `Human-Review-Confirmed: yes`.
+- README onboarding for member pull/push behavior and AI-assisted workflow.
+
+### Changed
+- Required governance skill version upgraded from `0.2.0` to `0.2.1`.
+
 ## [0.2.0] - 2026-03-05
 
 ### Added

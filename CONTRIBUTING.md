@@ -28,13 +28,13 @@ Base-Version: v0.1.0
 After changing governance files, refresh lock metadata:
 
 ```bash
-python3 .governance/update-skill-lock.py --skill-version 0.2.0
+python3 .governance/update-skill-lock.py --skill-version 0.2.1
 ```
 
 ## Release Commit
 
 ```bash
-scripts/prepare-release.sh patch v0.1.0
+scripts/prepare-release.sh patch v0.2.1
 ```
 
 ## Pull Request Requirements
@@ -44,3 +44,7 @@ Fill PR template fields:
 - `Base-Version:`
 - `Change-Type:`
 - `Target-Version:` (use `N/A` for non-release PRs)
+- `AI-Agent:` (`codex|claude-code|cursor|copilot|other|none`)
+- `AI-Assistance:` (`none|low|medium|high`)
+- `Human-Review-Confirmed:` (`yes` required)
+- `AI-Notes:` short summary or `N/A`

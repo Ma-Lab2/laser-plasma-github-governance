@@ -26,7 +26,7 @@ pre-commit install --hook-type commit-msg
 After updating governance files, refresh lock metadata:
 
 ```bash
-python3 .governance/update-skill-lock.py --skill-version 0.2.0
+python3 .governance/update-skill-lock.py --skill-version 0.2.1
 ```
 
 ## Release Workflow
@@ -55,3 +55,6 @@ CI blocks merge when:
 - `VERSION` changed without `CHANGELOG.md`
 - commits lack `Base-Version`
 - release change lacks matching `Target-Version`
+- `AI-Agent` is missing or invalid
+- `AI-Assistance` is missing or invalid
+- `Human-Review-Confirmed` is not `yes`

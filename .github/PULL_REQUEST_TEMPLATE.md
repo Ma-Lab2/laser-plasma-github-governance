@@ -4,9 +4,13 @@ Describe the change clearly.
 
 ## Governance Fields (Required)
 
-Base-Version: v0.1.0
+Base-Version: v0.2.1
 Change-Type: feature
 Target-Version: N/A
+AI-Agent: none
+AI-Assistance: low
+Human-Review-Confirmed: yes
+AI-Notes: N/A
 
 ## Checklist
 
@@ -14,3 +18,4 @@ Target-Version: N/A
 - [ ] Every commit in this PR includes `Base-Version` trailer.
 - [ ] If VERSION changed, CHANGELOG.md is updated.
 - [ ] OWNERS and HANDOVER docs remain valid.
+- [ ] AI participation fields above are complete and accurate.

@@ -7,7 +7,7 @@ from pathlib import Path
 
 SKILL_NAME = "laser-plasma-github-governance"
 DEFAULT_SKILL_REPO = "https://github.com/Ma-Lab2/laser-plasma-github-governance.git"
-DEFAULT_SKILL_VERSION = "0.2.0"
+DEFAULT_SKILL_VERSION = "0.2.1"
 
 MANAGED_FILES = [
     ".github/workflows/governance-check.yml",

@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 SKILL_NAME = "laser-plasma-github-governance"
-DEFAULT_REQUIRED_SKILL_VERSION = "0.2.0"
+DEFAULT_REQUIRED_SKILL_VERSION = "0.2.1"
 
 SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
 TAGVER = re.compile(r"^v[0-9]+\.[0-9]+\.[0-9]+$")

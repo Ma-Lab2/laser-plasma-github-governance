@@ -14,7 +14,7 @@ Create repositories that are governable from day one and survive maintainer turn
 - `CONTRIBUTING.md`
 4. Refresh governance lock and manifest:
 ```bash
-python3 .governance/update-skill-lock.py --skill-version 0.2.0
+python3 .governance/update-skill-lock.py --skill-version 0.2.1
 ```
 5. Commit template baseline and open the first PR.
 6. Merge the PR and create initial tag `v0.1.0`.
@@ -36,3 +36,4 @@ python3 .governance/update-skill-lock.py --skill-version 0.2.0
 - `OWNERS.yaml` includes at least 2 maintainers.
 - `docs/HANDOVER.md` exists and has current maintainer list.
 - `.governance/skill.lock.json` and `.governance/manifest.sha256` exist and pass validation.
+- PR template includes valid `AI-Agent`, `AI-Assistance`, and `Human-Review-Confirmed: yes`.

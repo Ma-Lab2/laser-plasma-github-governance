@@ -137,7 +137,7 @@ payload = {
     "installation": {
         "installed": False,
         "installed_version": None,
-        "required_version": "0.2.0",
+        "required_version": "0.2.1",
         "upgrade_required": None,
         "lock_valid": False,
         "validator_hash_ok": False,

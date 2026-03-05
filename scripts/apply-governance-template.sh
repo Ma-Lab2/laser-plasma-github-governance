@@ -6,7 +6,7 @@ usage() {
 Usage: apply-governance-template.sh <target-repo-path> [skill-version]
 
 Example:
-  apply-governance-template.sh /path/to/repo 0.2.0
+  apply-governance-template.sh /path/to/repo 0.2.1
 EOF
 }
 
@@ -16,7 +16,7 @@ if [[ $# -lt 1 || $# -gt 2 ]]; then
 fi
 
 TARGET="$(cd "$1" && pwd)"
-SKILL_VERSION="${2:-0.2.0}"
+SKILL_VERSION="${2:-0.2.1}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TEMPLATE="$REPO_ROOT/assets/repo-template"
