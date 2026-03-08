@@ -8,6 +8,7 @@ Usage: onboarding-check.sh [options]
 Options:
   --org <org>              GitHub organization (default: Ma-Lab2)
   --repo <repo>            Repository name for optional access check
+  --ssh-host <host>        SSH host alias in ~/.ssh/config (default: github.com)
   --token-env <ENV>        Token env var name (default: GH_TOKEN)
   --out <path>             JSON output path (default: ./onboarding-check.json)
   -h, --help               Show help
@@ -19,6 +20,7 @@ EOF
 
 ORG="Ma-Lab2"
 REPO=""
+SSH_HOST="github.com"
 TOKEN_ENV="GH_TOKEN"
 OUT_JSON="./onboarding-check.json"
 
@@ -30,6 +32,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --repo)
       REPO="$2"
+      shift 2
+      ;;
+    --ssh-host)
+      SSH_HOST="$2"
       shift 2
       ;;
     --token-env)
@@ -58,7 +64,7 @@ TOKEN="${!TOKEN_ENV:-}"
 
 TMP_JSON="$(mktemp)"
 
-python3 - "$TMP_JSON" "$ORG" "$REPO" "$TOKEN_ENV" "$TOKEN" "$REPO_ROOT" <<'PY'
+python3 - "$TMP_JSON" "$ORG" "$REPO" "$SSH_HOST" "$TOKEN_ENV" "$TOKEN" "$REPO_ROOT" <<'PY'
 import json
 import os
 import platform
@@ -69,11 +75,12 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-out_path, org, repo, token_env, token, repo_root = sys.argv[1:]
+out_path, org, repo, ssh_host, token_env, token, repo_root = sys.argv[1:]
 checks = []
 environment = {
     "runtime": "unknown",
     "git_remote_mode": "unknown",
+    "ssh_host": ssh_host,
     "ssh_ready": False,
     "token_ready": False,
 }
@@ -97,6 +104,46 @@ def detect_runtime() -> str:
     if system == "linux":
         return "linux-native"
     return "unknown"
+
+def check_token_load_path_risk(token_name: str) -> str | None:
+    bashrc = Path.home() / ".bashrc"
+    if not bashrc.exists():
+        return None
+    try:
+        lines = bashrc.read_text(encoding="utf-8", errors="ignore").splitlines()
+    except Exception:
+        return None
+
+    token_indices = []
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.startswith(f"export {token_name}=") or stripped.startswith(f"{token_name}="):
+            token_indices.append(i)
+
+    if not token_indices:
+        return None
+
+    return_indices = []
+    for i, line in enumerate(lines):
+        text = line.strip()
+        if "return" not in text:
+            continue
+        if "$-" in text or "non-interactive" in text or "bashrc" in text:
+            return_indices.append(i)
+        if text == "return":
+            return_indices.append(i)
+
+    if not return_indices:
+        return None
+
+    earliest_token = min(token_indices)
+    if any(idx < earliest_token for idx in return_indices):
+        return (
+            f"Detected {token_name} in ~/.bashrc, but non-interactive/login shells may return before loading it. "
+            "Move token export to ~/.profile or ~/.bash_profile, then run: "
+            f"source ~/.profile && echo ${{{token_name}:+SET}}"
+        )
+    return None
 
 def gh_get(url: str, token_value: str):
     req = urllib.request.Request(
@@ -137,6 +184,9 @@ if token:
     environment["token_ready"] = True
 else:
     add("token_exists", "BLOCKER", f"Environment variable {token_env} is missing")
+    load_path_hint = check_token_load_path_risk(token_env)
+    if load_path_hint:
+        add("token_load_path_risk", "WARN", load_path_hint)
 
 # 4) Org API access
 if token:
@@ -223,7 +273,7 @@ else:
                 "-o",
                 "ConnectTimeout=10",
                 "-T",
-                "git@github.com",
+                f"git@{ssh_host}",
             ],
             text=True,
             capture_output=True,
@@ -231,11 +281,19 @@ else:
         ssh_output = f"{ssh_check.stdout}\n{ssh_check.stderr}".strip()
         if "successfully authenticated" in ssh_output.lower():
             environment["ssh_ready"] = True
-            add("ssh_github_auth", "PASS", "SSH authentication to GitHub succeeded")
+            add("ssh_github_auth", "PASS", f"SSH authentication to GitHub succeeded via host: {ssh_host}")
         elif "permission denied (publickey)" in ssh_output.lower():
-            add("ssh_github_auth", "WARN", "SSH key exists but GitHub authentication failed; check key upload and ssh-agent")
+            add(
+                "ssh_github_auth",
+                "WARN",
+                f"SSH key exists but GitHub authentication failed via host {ssh_host}; check key upload and ssh-agent",
+            )
         else:
-            add("ssh_github_auth", "WARN", "Could not verify SSH auth to GitHub; check network or host access if you plan to use SSH")
+            add(
+                "ssh_github_auth",
+                "WARN",
+                f"Could not verify SSH auth to GitHub via host {ssh_host}; check network or host access if you plan to use SSH",
+            )
     else:
         add("ssh_key_exists", "WARN", "No SSH public key found; SSH is recommended for daily Git transport")
 
