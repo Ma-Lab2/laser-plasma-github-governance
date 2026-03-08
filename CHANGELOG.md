@@ -21,6 +21,8 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 ### Changed
 - `run-org-audit.sh` git authentication uses non-interactive basic token flow to avoid credential popup loops.
 - Platform policy checker now treats `branch_protection_not_enabled` as warning in current governance mode.
+- `onboarding-check.sh` now detects runtime (`wsl` / `windows-native` / `linux-native`), Git transport mode, SSH readiness, and keeps `GH_TOKEN` checks separate from daily Git auth guidance.
+- Onboarding docs now explain dual-stack support (`WSL` and `Windows native`) and clearly separate `SSH` for Git transport from `GH_TOKEN` for audit/API access.
 
 ### Verified
 - Final gate test suite executed on 2026-03-05 and archived in:
