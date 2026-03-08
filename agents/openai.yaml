@@ -1,0 +1,4 @@
+interface:
+  display_name: "Laser Plasma GitHub Governance"
+  short_description: "Govern GitHub repos with strict versioned workflows"
+  default_prompt: "Apply this governance to create, pull, push, release, and handover project repositories with strict version rules."

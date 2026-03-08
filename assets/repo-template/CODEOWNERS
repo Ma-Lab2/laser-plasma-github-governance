@@ -1,0 +1,7 @@
+# Replace with real GitHub usernames.
+* @primary-maintainer @secondary-maintainer
+
+VERSION @primary-maintainer @secondary-maintainer
+CHANGELOG.md @primary-maintainer @secondary-maintainer
+OWNERS.yaml @primary-maintainer @secondary-maintainer
+docs/HANDOVER.md @primary-maintainer @secondary-maintainer

@@ -1,0 +1,11 @@
+project: replace-with-project-name
+maintainers:
+  - github: @primary-maintainer
+    role: lead
+    backup_for: @secondary-maintainer
+  - github: @secondary-maintainer
+    role: co-maintainer
+    backup_for: @primary-maintainer
+handover:
+  required_min_maintainers: 2
+  graduation_notice_days: 30
