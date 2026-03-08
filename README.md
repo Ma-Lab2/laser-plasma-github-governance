@@ -18,6 +18,13 @@ Run onboarding self-check:
 ./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance
 ```
 
+Before using the governance workflow, separate the two authentication jobs:
+
+- `SSH` is recommended for daily `git clone` / `git pull` / `git push`
+- `GH_TOKEN` is required for governance scripts, organization audit, and GitHub API access
+
+Both `WSL` and `Windows native` shells are supported. The onboarding guide explains the correct setup path for each runtime.
+
 ## What This Repository Provides
 
 - Governance template: `assets/repo-template/`
@@ -38,6 +45,7 @@ Then replace placeholders in `OWNERS.yaml`, `CODEOWNERS`, and `docs/HANDOVER.md`
 
 - If they have read permission, `git clone` / `git pull` works normally.
 - If they do not have read permission, authentication fails.
+- Daily Git transport should prefer SSH; HTTPS remains a fallback path.
 
 ## What Happens When Members Push
 

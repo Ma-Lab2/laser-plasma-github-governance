@@ -17,11 +17,14 @@ Use this skill to enforce a repository governance baseline for a laser-plasma re
 4. Require commit trailers (`Base-Version`, optionally `Target-Version`).
 5. Require lock-based skill installation checks (`skill.lock.json`, `manifest.sha256`).
 6. Require AI-agent disclosure and human-review confirmation in every PR.
-7. Use onboarding guides for role-specific setup and execution:
+7. Use onboarding guides for runtime-specific and role-specific setup:
    - `docs/onboarding/00-start-here.md`
    - `docs/onboarding/10-member-path.md`
    - `docs/onboarding/20-admin-path.md`
    - `docs/onboarding/30-ai-agents.md`
+8. Treat `SSH` and `GH_TOKEN` as separate controls:
+   - `SSH` for daily Git transport
+   - `GH_TOKEN` for audit and GitHub API access
 
 ## Mandatory Governance Rules
 
@@ -87,3 +90,4 @@ git push origin v0.1.0
 - Apply this governance to new and existing repositories.
 - Keep CI strict and local hooks fast.
 - Treat `VERSION` as source of truth for repository version state.
+- Support both `WSL` and `Windows native` terminals, but make members verify which runtime their agent is actually using.
