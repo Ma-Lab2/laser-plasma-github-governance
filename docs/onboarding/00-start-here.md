@@ -45,9 +45,24 @@ source ~/.bash_profile
 ./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance
 ```
 
+如果你使用了 SSH host 别名（例如 `github-small`），请显式传入：
+```bash
+./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance --ssh-host github-small
+```
+
+成员工作前建议再跑一次预检（包含仓库可拉取检查）：
+```bash
+./scripts/member-preflight.sh --org Ma-Lab2 --repo Pytps-web --ssh-host github-small
+```
+
 4. 如果你准备日常协作代码，再验证 SSH：
 ```bash
 ssh -T git@github.com
+```
+
+如果你在 `~/.ssh/config` 里用了别名 host，也用别名验证：
+```bash
+ssh -T git@github-small
 ```
 
 首次配置时 GitHub 常见返回是：
@@ -66,6 +81,39 @@ ssh -T git@github.com
 ./skills/governance-audit/scripts/run-org-audit.sh \
   --org Ma-Lab2 \
   --fail-on-blocker false
+```
+
+成员一键启动（装 hooks + 预检 + 可选仓库列表）：
+```bash
+./scripts/bootstrap-member.sh --org Ma-Lab2 --repo Pytps-web --ssh-host github-small --with-repo-list
+```
+
+列出当前账号可拉取项目：
+```bash
+./scripts/list-accessible-repos.sh --org Ma-Lab2 --ssh-host github-small
+```
+
+稳健拉取仓库（支持超时和 HTTPS 回退）：
+```bash
+./scripts/clone-repo.sh \
+  --org Ma-Lab2 \
+  --repo Pytps-web \
+  --ssh-host github-small \
+  --https-fallback
+```
+
+中断后清理卡住的 git/ssh 进程：
+```bash
+./scripts/cleanup-git-hang.sh --repo Ma-Lab2/Pytps-web
+```
+
+生成 PR 治理字段模板：
+```bash
+./scripts/gen-pr-template.sh \
+  --base-version v0.2.1 \
+  --change-type feat \
+  --ai-agent codex \
+  --ai-assistance medium
 ```
 
 ## 安全提醒

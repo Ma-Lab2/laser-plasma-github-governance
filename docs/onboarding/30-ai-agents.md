@@ -9,6 +9,7 @@
 
 - 不直接改治理规则，优先调用仓库脚本。
 - 先运行 `./scripts/onboarding-check.sh`，确认当前 runtime、SSH、token 状态。
+- 成员开发前再运行 `./scripts/member-preflight.sh`，确认目标仓库可拉取并获得下一步命令。
 - PR 必填 AI 字段：
   - `AI-Agent`
   - `AI-Assistance`

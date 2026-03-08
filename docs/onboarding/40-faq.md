@@ -10,6 +10,8 @@ source ~/.bash_profile
 echo ${GH_TOKEN:+SET}
 ```
 
+`onboarding-check.sh` 现在会额外提示 `token_load_path_risk`，用于识别“token 在 `~/.bashrc`，但当前 shell 不会加载”的场景。
+
 ## Q2: 为什么我能 SSH push，但审计脚本还是报 token 问题？
 
 因为两者用途不同：
@@ -46,6 +48,12 @@ ssh -T git@github.com
 ./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance
 ```
 
+如果你使用 SSH host 别名（例如 `github-small`），建议改为：
+```bash
+ssh -T git@github-small
+./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance --ssh-host github-small
+```
+
 ## Q5: 普通成员为什么不能直接 push 到 main？
 
 这是治理要求，不是故障。  
@@ -74,3 +82,51 @@ ssh -T git@github.com
 
 不能。  
 token 一旦泄露，必须立刻 revoke 并重建。
+
+## Q9: `git clone` 一直卡住怎么办？
+
+优先使用带超时和回退的拉取脚本：
+
+```bash
+./scripts/clone-repo.sh \
+  --org Ma-Lab2 \
+  --repo Pytps-web \
+  --ssh-host github-small \
+  --https-fallback
+```
+
+如果你中断过 clone/fetch，先清理残留进程再重试：
+
+```bash
+./scripts/cleanup-git-hang.sh --repo Ma-Lab2/Pytps-web
+```
+
+## Q10: 如何快速看到我当前可拉取哪些项目？
+
+```bash
+./scripts/list-accessible-repos.sh --org Ma-Lab2 --ssh-host github-small
+```
+
+它会列出仓库名、可见性、SSH 地址，以及 `Pullable via SSH` 是否为 `YES`。
+
+## Q11: 常见报错怎么一条命令修复？
+
+- `Environment variable GH_TOKEN is missing`
+```bash
+source ~/.profile && echo ${GH_TOKEN:+SET}
+```
+
+- `Permission denied (publickey)`
+```bash
+ssh -T git@github-small
+```
+
+- `Clone verification failed: local HEAD is missing`
+```bash
+./scripts/clone-repo.sh --org Ma-Lab2 --repo Pytps-web --ssh-host github-small --https-fallback
+```
+
+- `git clone` / `git fetch` 挂住不返回
+```bash
+./scripts/cleanup-git-hang.sh --repo Ma-Lab2/Pytps-web
+```
