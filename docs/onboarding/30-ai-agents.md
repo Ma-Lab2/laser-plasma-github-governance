@@ -5,6 +5,10 @@
 先明确一件事：`Codex`、`Claude Code`、`Cursor` 不是独立操作系统。  
 真正决定配置位置的是它们跑在 `WSL` 还是 `Windows 原生终端`。
 
+如果你在带一名新成员接入，或者要给一台新的 WSL 电脑完整配置 GitHub + Codex + SSH，先看：
+
+- `docs/site/index.html`
+
 ## 通用原则（所有客户端）
 
 - 不直接改治理规则，优先调用仓库脚本。
@@ -36,6 +40,10 @@
 - 治理执行入口：`$laser-plasma-github-governance`
 - 审计入口：`$governance-audit`
 - Codex 使用哪个环境，取决于你从哪个终端启动它。
+- 先确认 `codex` 命令存在并可登录：
+  - `command -v codex`
+  - `codex --version`
+  - `codex login`
 - 建议把目标命令明确给 agent，例如：
 ```bash
 ./skills/governance-audit/scripts/run-org-audit.sh --org Ma-Lab2 --fail-on-blocker false

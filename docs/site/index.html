@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma-Lab2 GitHub 协作教学站</title>
+  <meta name="description" content="Ma-Lab2 课题组 GitHub 协作教学站：GitHub 注册、WSL 准备、SSH、Codex、治理 skill、分支开发与 PR 流程。">
+  <style>
+    :root {
+      --bg: #f4efe4;
+      --panel: rgba(255, 248, 236, 0.88);
+      --panel-strong: #fff8ea;
+      --ink: #191611;
+      --muted: #665f52;
+      --accent: #d95f28;
+      --accent-2: #0b7a75;
+      --accent-3: #1f3f8f;
+      --line: rgba(25, 22, 17, 0.14);
+      --shadow: 0 22px 60px rgba(34, 27, 18, 0.14);
+      --radius: 24px;
+      --radius-sm: 16px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      --sans: "Aptos", "Segoe UI Variable", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(217, 95, 40, 0.18), transparent 24%),
+        radial-gradient(circle at 85% 10%, rgba(11, 122, 117, 0.16), transparent 20%),
+        linear-gradient(180deg, #fbf4e6 0%, #f3ecdf 48%, #efe7d8 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(25, 22, 17, 0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(25, 22, 17, 0.028) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.58), rgba(0,0,0,0.12));
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      width: min(1200px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 24px 0 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 249, 240, 0.86);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 32px rgba(37, 28, 19, 0.08);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand-kicker {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+    }
+
+    .brand-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--muted);
+      transition: 180ms ease;
+    }
+
+    .nav a:hover {
+      border-color: var(--line);
+      color: var(--ink);
+      background: rgba(255,255,255,0.7);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 28px;
+    }
+
+    .hero-main,
+    .hero-side,
+    .panel,
+    .code-panel,
+    .faq-item,
+    .timeline-card,
+    .quick-card,
+    .route-card,
+    .check-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-main::after {
+      content: "COLLABORATION / VERSION / HANDOVER";
+      position: absolute;
+      right: -28px;
+      top: 26px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      color: rgba(25, 22, 17, 0.18);
+      transform: rotate(90deg);
+      transform-origin: top right;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(11, 122, 117, 0.08);
+      color: var(--accent-2);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 18px 0 14px;
+      font-family: var(--serif);
+      font-size: clamp(40px, 6vw, 76px);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+    }
+
+    .hero-lead {
+      margin: 0 0 22px;
+      max-width: 62ch;
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      border: 1px solid transparent;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+    }
+
+    .button-primary {
+      background: var(--ink);
+      color: #fff7ea;
+    }
+
+    .button-secondary {
+      background: rgba(255,255,255,0.76);
+      border-color: var(--line);
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .metric {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.66);
+      border: 1px solid rgba(25,22,17,0.08);
+    }
+
+    .metric strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    .metric span {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .hero-side {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .side-kicker {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .check-grid,
+    .route-grid,
+    .quick-grid,
+    .section-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .check-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.74);
+      box-shadow: none;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-3);
+      margin-bottom: 10px;
+    }
+
+    .status::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .check-card h3,
+    .route-card h3,
+    .quick-card h3,
+    .timeline-card h3,
+    .panel h2,
+    .code-panel h2,
+    .faq-item h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .check-card p,
+    .route-card p,
+    .quick-card p,
+    .timeline-card p,
+    .panel p,
+    .panel li,
+    .code-panel p,
+    .faq-answer,
+    .site-footer p {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .section {
+      margin-top: 24px;
+      padding: 30px;
+      position: relative;
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      max-width: 740px;
+    }
+
+    .section-index {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 8px;
+    }
+
+    .section h2 {
+      margin: 0 0 8px;
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .section-subtitle {
+      max-width: 62ch;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .route-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .route-card,
+    .quick-card,
+    .timeline-card,
+    .code-panel,
+    .faq-item {
+      padding: 22px;
+    }
+
+    .route-meta,
+    .quick-tag {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(31, 63, 143, 0.08);
+      color: var(--accent-3);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .route-card ul,
+    .panel ul,
+    .panel ol {
+      margin: 12px 0 0;
+      padding-left: 18px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+      gap: 18px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timeline-step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff7ea;
+      font-family: var(--mono);
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin-top: 14px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px 18px 18px;
+      overflow-x: auto;
+      border-radius: 18px;
+      background: #171717;
+      color: #ecf2ea;
+      border: 1px solid rgba(255,255,255,0.08);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.95em;
+      background: rgba(25, 22, 17, 0.08);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .copy-button {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: #f4f0e8;
+      border-radius: 999px;
+      min-height: 34px;
+      padding: 0 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .quick-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .quick-card {
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .badge-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.82);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .faq-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      color: inherit;
+    }
+
+    .faq-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(11, 122, 117, 0.1);
+      color: var(--accent-2);
+      font-family: var(--mono);
+      font-size: 18px;
+      flex: 0 0 auto;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 240ms ease;
+      padding-right: 52px;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 320px;
+      margin-top: 12px;
+    }
+
+    .site-footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 28px;
+      padding: 24px 6px 0;
+      border-top: 1px solid rgba(25,22,17,0.12);
+    }
+
+    .footer-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      margin: 0 0 6px;
+    }
+
+    @media (max-width: 1040px) {
+      .hero,
+      .split,
+      .route-grid,
+      .quick-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100vw - 18px, 100%);
+        padding-top: 12px;
+      }
+
+      .topbar {
+        border-radius: 24px;
+        align-items: flex-start;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero-main,
+      .hero-side,
+      .section,
+      .code-panel,
+      .route-card,
+      .quick-card,
+      .timeline-card,
+      .faq-item {
+        padding: 20px;
+      }
+
+      .hero h1 {
+        font-size: clamp(34px, 12vw, 54px);
+      }
+
+      .section h2 {
+        font-size: clamp(26px, 9vw, 38px);
+      }
+
+      .copy-button {
+        position: static;
+        margin-top: 10px;
+      }
+
+      .faq-answer {
+        padding-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-kicker">Ma-Lab2 Teaching Site</span>
+        <span class="brand-title">GitHub 协作教学站</span>
+      </div>
+      <nav class="nav">
+        <a href="#routes">角色路径</a>
+        <a href="#join">首次接入</a>
+        <a href="#agents">AI Agent</a>
+        <a href="#workflow">协作流程</a>
+        <a href="#faq">常见问题</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="top">
+      <div class="hero-main">
+        <span class="eyebrow">GitHub / WSL / Codex / Governance</span>
+        <h1>把课题组代码协作做成可延续的系统</h1>
+        <p class="hero-lead">
+          这不是一份零散命令清单，而是一条完整接入路径：从注册 GitHub、加入组织、配置新 WSL、安装 Codex 与 skill，到按版本号开分支、push、PR、review、handover。
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#join">先看 10 分钟接入路径</a>
+          <a class="button button-secondary" href="#workflow">查看标准开发流程</a>
+        </div>
+        <div class="hero-points">
+          <div class="metric">
+            <strong>SSH</strong>
+            <span>日常 <code>clone</code> / <code>pull</code> / <code>push</code> 推荐走 SSH，减少认证弹窗。</span>
+          </div>
+          <div class="metric">
+            <strong>GH_TOKEN</strong>
+            <span>用于治理脚本、组织审计、GitHub API。不要把 token 发到聊天里。</span>
+          </div>
+          <div class="metric">
+            <strong>Tag -&gt; Branch</strong>
+            <span>从明确版本基线开分支，而不是直接改 <code>main</code>。</span>
+          </div>
+        </div>
+      </div>
+      <aside class="hero-side">
+        <div>
+          <div class="side-kicker">first route</div>
+          <h2 style="margin: 6px 0 10px; font-family: var(--serif); font-size: 34px; line-height: 1.02;">先做三件事</h2>
+          <p style="margin: 0; color: var(--muted); line-height: 1.8;">新成员第一次来，不要直接写代码。先确认身份、运行环境和认证方式，再开始接入。</p>
+        </div>
+        <div class="check-grid">
+          <div class="check-card">
+            <div class="status">01 Runtime</div>
+            <h3>先确认你在哪个环境</h3>
+            <p>WSL 和 Windows 原生终端的 SSH、token、path 不是一套。agent 跑在哪里，就读哪里的配置。</p>
+          </div>
+          <div class="check-card">
+            <div class="status">02 Auth</div>
+            <h3>区分 SSH 和 GH_TOKEN</h3>
+            <p>SSH 用于代码传输；<code>GH_TOKEN</code> 用于审计和 API。两者不能互相代替。</p>
+          </div>
+          <div class="check-card">
+            <div class="status">03 Workflow</div>
+            <h3>所有修改都走分支和 PR</h3>
+            <p>禁止把“先改 main 再说”当临时方案。治理规则的意义就是长期可追溯。</p>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel section" id="routes">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-index">Paths</div>
+          <h2>先认领你的角色，再按对应路径执行</h2>
+          <p class="section-subtitle">同一个仓库，不同角色关心的问题不一样。新成员、普通开发者、管理员看到的优先级应该不同。</p>
+        </div>
+      </div>
+      <div class="route-grid">
+        <article class="route-card">
+          <span class="route-meta">New Member</span>
+          <h3>第一次接触 GitHub / WSL / Codex</h3>
+          <p>先完成 GitHub 注册、加入组织、WSL 基础环境、SSH、公钥上传、治理仓库克隆和 skill 安装。</p>
+          <ul>
+            <li>注册 GitHub 账号并启用 2FA</li>
+            <li>接受 <code>Ma-Lab2</code> 组织邀请</li>
+            <li>在 WSL 中检查 <code>git</code> / <code>python3</code> / <code>ssh</code></li>
+            <li>运行 <code>onboarding-check.sh</code></li>
+          </ul>
+        </article>
+        <article class="route-card">
+          <span class="route-meta">Contributor</span>
+          <h3>普通成员共同修改项目代码</h3>
+          <p>你的核心任务不是“能 push 就行”，而是让每次改动都知道基于哪个版本开始、准备合并到哪个版本。</p>
+          <ul>
+            <li>同步 tags 并从标签开分支</li>
+            <li>commit 必须带 <code>Base-Version</code></li>
+            <li>push 自己的分支，不直接推 <code>main</code></li>
+            <li>通过 PR 合并</li>
+          </ul>
+        </article>
+        <article class="route-card">
+          <span class="route-meta">Admin</span>
+          <h3>仓库维护者与组织管理员</h3>
+          <p>管理员不仅是 merge 代码的人，更要保证项目有版本、有人接、能审计、能交接。</p>
+          <ul>
+            <li>安装治理模板</li>
+            <li>设置 branch protection 和 required checks</li>
+            <li>运行组织审计</li>
+            <li>维护 <code>OWNERS</code> / <code>HANDOVER</code></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section" id="join">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-index">First 10 Minutes</div>
+          <h2>新成员首次接入：从 GitHub 注册到治理仓库就位</h2>
+          <p class="section-subtitle">这条路径专门写给“新小号 + 新 WSL 电脑”的成员。按顺序走，不要跳步。</p>
+        </div>
+      </div>
+      <div class="split">
+        <div class="timeline">
+          <article class="timeline-card">
+            <div class="timeline-step">01</div>
+            <h3>注册 GitHub 并加入课题组组织</h3>
+            <p>注册 GitHub 账号，绑定常用邮箱，建议开启双因素认证。然后由管理员邀请你加入 <code>Ma-Lab2</code>，你在邮箱或 GitHub 通知里接受邀请。</p>
+            <div class="badge-line">
+              <span class="badge">GitHub account</span>
+              <span class="badge">Email verified</span>
+              <span class="badge">Join Ma-Lab2</span>
+            </div>
+          </article>
+          <article class="timeline-card">
+            <div class="timeline-step">02</div>
+            <h3>在新 WSL 里检查基础环境</h3>
+            <p>先确认你真的在 WSL 终端里，再检查 <code>git</code>、<code>python3</code>、<code>ssh</code> 是否可用。如果没有，不要直接跳到 clone。</p>
+            <div class="code-wrap">
+              <button class="copy-button" data-copy-target="wsl-check">复制</button>
+              <pre id="wsl-check"><code>uname -a
+command -v git
+command -v python3
+command -v ssh</code></pre>
+            </div>
+          </article>
+          <article class="timeline-card">
+            <div class="timeline-step">03</div>
+            <h3>生成 SSH key 并上传 GitHub</h3>
+            <p>如果 <code>~/.ssh</code> 里没有可用公钥，就生成新的。把 <code>.pub</code> 文件内容复制到 GitHub 的 <code>Settings -&gt; SSH and GPG keys</code>。</p>
+            <div class="code-wrap">
+              <button class="copy-button" data-copy-target="ssh-setup">复制</button>
+              <pre id="ssh-setup"><code>ls -la ~/.ssh
+ssh-keygen -t ed25519 -C "your-github-email@example.com"
+cat ~/.ssh/id_ed25519.pub
+ssh -T git@github.com</code></pre>
+            </div>
+          </article>
+          <article class="timeline-card">
+            <div class="timeline-step">04</div>
+            <h3>安装 Codex / codex cli 并确认可用</h3>
+            <p>这一步只写“安装后验证”和“登录检查”。不同机器安装方式可能不同，但接入课题组前至少要确认命令存在、版本可读、账号已登录。</p>
+            <div class="code-wrap">
+              <button class="copy-button" data-copy-target="codex-check">复制</button>
+              <pre id="codex-check"><code>command -v codex
+codex --version
+codex login</code></pre>
+            </div>
+          </article>
+          <article class="timeline-card">
+            <div class="timeline-step">05</div>
+            <h3>用 SSH 克隆治理仓库并运行自检</h3>
+            <p>治理仓库是组内协作规则入口。先把它拉下来，再用脚本确认当前 runtime、SSH、token、脚本状态。</p>
+            <div class="code-wrap">
+              <button class="copy-button" data-copy-target="clone-check">复制</button>
+              <pre id="clone-check"><code>git clone git@github.com:Ma-Lab2/laser-plasma-github-governance.git
+cd laser-plasma-github-governance
+./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance</code></pre>
+            </div>
+          </article>
+          <article class="timeline-card">
+            <div class="timeline-step">06</div>
+            <h3>安装 skill，再开始真正协作</h3>
+            <p>治理 skill 和审计 skill 装好后，Codex 才能更稳定地按课题组规则执行。日常写代码优先用 SSH；只有跑审计、治理脚本时才需要 <code>GH_TOKEN</code>。</p>
+            <div class="code-wrap">
+              <button class="copy-button" data-copy-target="skill-install">复制</button>
+              <pre id="skill-install"><code>./scripts/install-governance-audit-skill.sh
+
+# 使用时可触发
+$laser-plasma-github-governance
+$governance-audit</code></pre>
+            </div>
+          </article>
+        </div>
+        <aside class="code-panel">
+          <div class="section-index">Important Split</div>
+          <h2>把两类认证分清楚</h2>
+          <p>很多新成员的第一个错误，就是把 SSH 和 token 混成一个概念。你必须记住：</p>
+          <ul>
+            <li><code>SSH</code>：日常 <code>git clone</code> / <code>git pull</code> / <code>git push</code></li>
+            <li><code>GH_TOKEN</code>：治理脚本、组织审计、GitHub API</li>
+            <li>能 SSH push，不代表组织审计就一定能跑</li>
+            <li>能跑 token API，不代表日常 Git 传输就该走 HTTPS</li>
+          </ul>
+          <div class="code-wrap">
+            <button class="copy-button" data-copy-target="token-check">复制</button>
+            <pre id="token-check"><code># WSL 常见做法
+source ~/.bash_profile
+echo ${GH_TOKEN:+SET}
+
+# 不要把 token 发到聊天窗口</code></pre>
+          </div>
+          <div class="badge-line">
+            <span class="badge">WSL recommended</span>
+            <span class="badge">SSH for Git</span>
+            <span class="badge">GH_TOKEN for audit</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel section" id="agents">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-index">Agents</div>
+          <h2>Codex、codex cli、Claude Code、Cursor 都能用，但都要服从同一套治理规则</h2>
+          <p class="section-subtitle">agent 不是特权通道。它们只能帮助你更快执行流程，不能绕过版本基线、分支开发、PR 审核和人工确认。</p>
+        </div>
+      </div>
+      <div class="quick-grid">
+        <article class="quick-card">
+          <span class="quick-tag">Codex / codex cli</span>
+          <h3>先检查命令可用，再装治理 skill</h3>
+          <p>如果在 WSL 里运行，Codex 就读取 WSL 的环境变量、SSH key 和本地仓库。安装完成后，用 skill 触发词进入组内标准流程。</p>
+          <div class="code-wrap">
+            <button class="copy-button" data-copy-target="codex-flow">复制</button>
+            <pre id="codex-flow"><code>command -v codex
+codex --version
+codex login
+
+# 之后在 Codex 中使用
+$laser-plasma-github-governance
+$governance-audit</code></pre>
+          </div>
+        </article>
+        <article class="quick-card">
+          <span class="quick-tag">Claude Code / Cursor</span>
+          <h3>仍然建议优先调用仓库已有脚本</h3>
+          <p>无论你用的是 Claude Code 还是 Cursor，最稳妥的做法都一样：让它们读取治理仓库里的脚本和文档，不要让 agent 在空白上下文里随意发明一套流程。</p>
+          <ul>
+            <li>先跑 <code>onboarding-check.sh</code></li>
+            <li>先确认当前是 WSL 还是 Windows 原生</li>
+            <li>先让 agent 输出执行清单，再执行</li>
+            <li>PR 必填 <code>AI-Agent</code>、<code>AI-Assistance</code>、<code>Human-Review-Confirmed: yes</code></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section" id="workflow">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-index">Workflow</div>
+          <h2>课题组共同修改代码的标准流程</h2>
+          <p class="section-subtitle">所有项目都要有独立版本号。多人维护时，最怕的不是写得慢，而是基线不清楚、合并后没人知道代码基于哪个版本继续演化。</p>
+        </div>
+      </div>
+      <div class="split">
+        <div class="code-panel">
+          <h2>普通成员 6 步法</h2>
+          <ol>
+            <li>同步 tags</li>
+            <li>从明确 tag 开分支</li>
+            <li>开发和测试</li>
+            <li>commit 时写 <code>Base-Version</code></li>
+            <li>push 自己的分支</li>
+            <li>提 PR，等待 review 和合并</li>
+          </ol>
+          <div class="code-wrap">
+            <button class="copy-button" data-copy-target="member-flow">复制</button>
+            <pre id="member-flow"><code>git fetch --tags --prune
+./.governance/start-from-tag.sh v0.1.0 feature/your-change
+
+git add .
+git commit -m "your change summary" -m "Base-Version: v0.1.0"
+git push origin feature/your-change</code></pre>
+          </div>
+        </div>
+        <div class="code-panel">
+          <h2>PR 里必须补齐的信息</h2>
+          <ul>
+            <li><code>Base-Version</code></li>
+            <li><code>Change-Type</code></li>
+            <li><code>Target-Version</code></li>
+            <li><code>AI-Agent</code></li>
+            <li><code>AI-Assistance</code></li>
+            <li><code>Human-Review-Confirmed: yes</code></li>
+            <li><code>AI-Notes</code></li>
+          </ul>
+          <p>管理员需要额外保证：branch protection 开启、required checks 就位、<code>OWNERS</code> 与 <code>HANDOVER</code> 可用、组织审计可跑。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel section" id="admin">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-index">Admin</div>
+          <h2>管理员的职责不是“能 merge”，而是“让项目可持续”</h2>
+          <p class="section-subtitle">如果一个项目只靠一个学生维护，等他毕业后就会断代。管理员要负责把仓库变成可交接系统，而不是个人文件夹。</p>
+        </div>
+      </div>
+      <div class="quick-grid">
+        <article class="quick-card">
+          <span class="quick-tag">Repository Baseline</span>
+          <h3>新仓库初始化</h3>
+          <p>给新项目安装治理模板、替换占位符、刷新 lock 信息、建立初始标签，再配置最小 branch protection。</p>
+          <div class="code-wrap">
+            <button class="copy-button" data-copy-target="admin-init">复制</button>
+            <pre id="admin-init"><code>./scripts/apply-governance-template.sh /path/to/target-repo 0.2.1
+python3 .governance/update-skill-lock.py --skill-version 0.2.1
+git tag v0.1.0
+git push origin v0.1.0</code></pre>
+          </div>
+        </article>
+        <article class="quick-card">
+          <span class="quick-tag">Organization Audit</span>
+          <h3>定期检查所有仓库是否按治理规则运行</h3>
+          <p>组织审计的意义不是“挑错”，而是尽早发现没有版本号、没有治理模板、没有 required checks、没人接手的仓库。</p>
+          <div class="code-wrap">
+            <button class="copy-button" data-copy-target="org-audit">复制</button>
+            <pre id="org-audit"><code>./skills/governance-audit/scripts/run-org-audit.sh \
+  --org Ma-Lab2 \
+  --fail-on-blocker false</code></pre>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section" id="faq">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-index">FAQ</div>
+          <h2>新成员最容易踩的坑</h2>
+          <p class="section-subtitle">这里不重复写完整教程，只解决最常见、最浪费时间的误区。</p>
+        </div>
+      </div>
+      <div class="faq-list">
+        <article class="faq-item open">
+          <button class="faq-trigger" type="button">
+            <h3>为什么我能 SSH push，但审计脚本还是报 token 问题？</h3>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            因为 SSH 和 <code>GH_TOKEN</code> 管的是两件事。SSH 负责日常 Git 传输；<code>GH_TOKEN</code> 负责治理脚本和 GitHub API。一个能用，不代表另一个自动可用。
+          </div>
+        </article>
+        <article class="faq-item">
+          <button class="faq-trigger" type="button">
+            <h3>为什么我在 Windows 配好了，WSL 里还是不生效？</h3>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            因为 WSL 和 Windows 原生环境的 <code>~/.ssh</code>、环境变量和 agent 进程可能完全不同。切换环境后，重新验证 <code>echo ${GH_TOKEN:+SET}</code> 和 <code>ssh -T git@github.com</code>。
+          </div>
+        </article>
+        <article class="faq-item">
+          <button class="faq-trigger" type="button">
+            <h3>普通成员为什么不能直接 push 到 main？</h3>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            因为课题组需要保留清晰的版本基线、review 记录和交接链路。直接 push 到 <code>main</code> 会让多人协作很快失控。
+          </div>
+        </article>
+        <article class="faq-item">
+          <button class="faq-trigger" type="button">
+            <h3>token 能不能发到聊天，让 agent 帮我配置？</h3>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            不能。token 泄露后必须立即 revoke。正确做法是只在本机环境变量中配置，然后让 agent 检查“是否已设置”，不要把 token 明文发出去。
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div>
+        <h3 class="footer-title">Ma-Lab2 GitHub 协作教学站</h3>
+        <p>推荐入口：先读这页，再回到治理仓库的 <code>README</code>、<code>00-start-here</code>、<code>30-ai-agents</code> 执行具体脚本。</p>
+      </div>
+      <div>
+        <p>核心原则：<strong>每个项目独立版本化</strong>、<strong>所有修改走分支和 PR</strong>、<strong>毕业后项目仍能继续维护</strong>。</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-button').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const target = document.getElementById(button.dataset.copyTarget);
+        if (!target) return;
+        const text = target.innerText;
+        try {
+          await navigator.clipboard.writeText(text);
+          const original = button.textContent;
+          button.textContent = '已复制';
+          window.setTimeout(() => {
+            button.textContent = original;
+          }, 1400);
+        } catch (err) {
+          button.textContent = '复制失败';
+          window.setTimeout(() => {
+            button.textContent = '复制';
+          }, 1400);
+        }
+      });
+    });
+
+    document.querySelectorAll('.faq-item').forEach((item) => {
+      const trigger = item.querySelector('.faq-trigger');
+      const icon = item.querySelector('.faq-icon');
+      trigger.addEventListener('click', () => {
+        item.classList.toggle('open');
+        icon.textContent = item.classList.contains('open') ? '−' : '+';
+      });
+      icon.textContent = item.classList.contains('open') ? '−' : '+';
+    });
+  </script>
+</body>
+</html>

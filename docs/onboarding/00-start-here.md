@@ -3,6 +3,10 @@
 这是课题组成员使用 `laser-plasma-github-governance` 的统一入口。  
 先确认运行环境和鉴权方式，再按身份进入对应路径。
 
+如果你是第一次接触 GitHub、WSL、Codex，或者你在配置一台新的 WSL 电脑，先看完整教学网页：
+
+- `docs/site/index.html`
+
 ## 你是谁
 
 - 普通成员（Contributor）：去看 `10-member-path.md`
