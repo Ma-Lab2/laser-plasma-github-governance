@@ -29,6 +29,7 @@ Use this skill to enforce a repository governance baseline for a laser-plasma re
 10. Use `scripts/clone-repo.sh` for robust cloning (timeout + optional HTTPS fallback + post-clone verify).
 11. Use `scripts/cleanup-git-hang.sh` when git/ssh processes hang after interrupted operations.
 12. Use `scripts/gen-pr-template.sh` and `scripts/commit-with-base.sh` to reduce governance field and trailer mistakes.
+13. Ensure local hooks are installed before committing (`scripts/install-local-governance-hooks.sh`); onboarding check treats missing hooks as blocker.
 
 ## Mandatory Governance Rules
 
@@ -83,6 +84,7 @@ git push origin v0.1.0
 - `scripts/member-preflight.sh`
 - `scripts/bootstrap-member.sh`
 - `scripts/list-accessible-repos.sh`
+- `scripts/install-local-governance-hooks.sh`
 - `scripts/clone-repo.sh`
 - `scripts/cleanup-git-hang.sh`
 - `scripts/gen-pr-template.sh`

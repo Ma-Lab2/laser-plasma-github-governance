@@ -130,3 +130,19 @@ ssh -T git@github-small
 ```bash
 ./scripts/cleanup-git-hang.sh --repo Ma-Lab2/Pytps-web
 ```
+
+## Q12: 为什么我按 skill 流程走了，提交仍然没被 trailer 规则拦截？
+
+通常是本地 hooks 没安装。先执行：
+
+```bash
+./scripts/install-local-governance-hooks.sh
+```
+
+然后再跑：
+
+```bash
+./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance --ssh-host github-small
+```
+
+若 `hooks_installed` 不是 `PASS`，请先修复再提交。

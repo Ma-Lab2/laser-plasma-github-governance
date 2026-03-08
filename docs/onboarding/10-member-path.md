@@ -11,12 +11,17 @@
 
 ## 开发流程
 
-1. 先做成员预检：
+1. 先安装本地治理 hooks：
+```bash
+./scripts/install-local-governance-hooks.sh
+```
+
+2. 做成员预检：
 ```bash
 ./scripts/member-preflight.sh --org Ma-Lab2 --repo <your-repo> --ssh-host github-small
 ```
 
-2. 克隆仓库（稳健模式）：
+3. 克隆仓库（稳健模式）：
 ```bash
 ./scripts/clone-repo.sh \
   --org Ma-Lab2 \
@@ -25,13 +30,13 @@
   --https-fallback
 ```
 
-3. 同步 tags 并从标签开分支：
+4. 同步 tags 并从标签开分支：
 ```bash
 git fetch --tags --prune
 ./.governance/start-from-tag.sh vX.Y.Z feature/your-branch
 ```
 
-4. 开发并提交（每个 commit 都要带 Base-Version）：
+5. 开发并提交（每个 commit 都要带 Base-Version）：
 ```bash
 ./scripts/commit-with-base.sh \
   --base-version vX.Y.Z \
@@ -39,12 +44,12 @@ git fetch --tags --prune
   --body "why this change is needed"
 ```
 
-5. 推送并提 PR（不直接推 main）：
+6. 推送并提 PR（不直接推 main）：
 ```bash
 git push origin feature/your-branch
 ```
 
-6. 生成 PR Governance 字段草稿（必填）：
+7. 生成 PR Governance 字段草稿（必填）：
 ```bash
 ./scripts/gen-pr-template.sh \
   --base-version vX.Y.Z \
@@ -54,7 +59,7 @@ git push origin feature/your-branch
   --ai-assistance medium
 ```
 
-7. PR 必填字段：
+8. PR 必填字段：
 - `Base-Version`
 - `Change-Type`
 - `Target-Version`

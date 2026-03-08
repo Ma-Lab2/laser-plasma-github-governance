@@ -65,15 +65,14 @@ if [[ -z "$REPO" ]]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HOOK_INSTALLER="$SCRIPT_DIR/install-local-governance-hooks.sh"
 
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  if command -v pre-commit >/dev/null 2>&1; then
-    echo "[INFO] Installing pre-commit hooks in current repo..."
-    pre-commit install
-    pre-commit install --hook-type commit-msg
-    echo "[OK] pre-commit hooks installed."
+  if [[ -x "$HOOK_INSTALLER" ]]; then
+    echo "[INFO] Installing local governance hooks..."
+    "$HOOK_INSTALLER"
   else
-    echo "[WARN] pre-commit command not found; skipping hook installation."
+    echo "[WARN] Hook installer script not found: $HOOK_INSTALLER"
   fi
 else
   echo "[WARN] Not inside a git repo; skipping local hook installation."

@@ -320,6 +320,26 @@ if any("credential-manager" in h or "manager-core" in h for h in helper_values):
 else:
     add("credential_interactive_risk", "PASS", "No interactive credential manager risk detected")
 
+# 11) Local governance hooks installation
+pre_commit_hook = Path(repo_root) / ".git" / "hooks" / "pre-commit"
+commit_msg_hook = Path(repo_root) / ".git" / "hooks" / "commit-msg"
+missing_hooks = []
+if not pre_commit_hook.exists():
+    missing_hooks.append(pre_commit_hook.name)
+if not commit_msg_hook.exists():
+    missing_hooks.append(commit_msg_hook.name)
+
+if missing_hooks:
+    add(
+        "hooks_installed",
+        "BLOCKER",
+        "Missing local hooks: "
+        + ", ".join(missing_hooks)
+        + ". Run: ./scripts/install-local-governance-hooks.sh",
+    )
+else:
+    add("hooks_installed", "PASS", "Local governance hooks are installed")
+
 summary = {"pass": 0, "warn": 0, "blocker": 0}
 for item in checks:
     status = item["status"]

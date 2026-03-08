@@ -76,6 +76,11 @@ ssh -T git@github-small
 ./scripts/install-governance-audit-skill.sh
 ```
 
+安装本地治理 hooks（必做，未安装会被 onboarding-check 判为 blocker）：
+```bash
+./scripts/install-local-governance-hooks.sh
+```
+
 组织审计（先不阻断，先看报告）：
 ```bash
 ./skills/governance-audit/scripts/run-org-audit.sh \
