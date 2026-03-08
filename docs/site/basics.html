@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub 基础 | Ma-Lab2 教学站</title>
+  <meta name="description" content="Ma-Lab2 教学站：GitHub 基础知识，包含 repo、branch、commit、tag、PR、review、issue 等核心概念。">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="basics">
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-kicker">Ma-Lab2 Teaching Site</span>
+        <span class="brand-title">GitHub 基础</span>
+      </div>
+      <nav class="nav">
+        <a href="./index.html" data-page-link="home">首页</a>
+        <a href="./basics.html" data-page-link="basics">GitHub 基础</a>
+        <a href="./setup.html" data-page-link="setup">首次接入</a>
+        <a href="./workflow.html" data-page-link="workflow">成员协作</a>
+        <a href="./agents.html" data-page-link="agents">AI Agent</a>
+        <a href="./admin.html" data-page-link="admin">管理员</a>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="hero-main page-main" data-watermark="REPO / BRANCH / COMMIT / PR / TAG">
+        <span class="page-chip">GitHub Basics</span>
+        <h1 class="page-title">先把 GitHub 基础概念讲清楚，再谈协作规范</h1>
+        <p class="page-lead">如果成员只知道“把代码传上去”，却不知道 repo、branch、commit、tag、PR 分别是什么，后面的治理规则就很容易变成机械背诵。这里先把最基础的对象和它们之间的关系讲清楚。</p>
+        <div class="page-actions">
+          <a class="button button-primary" href="./workflow.html">看协作流程如何落地</a>
+          <a class="button button-secondary" href="./setup.html">先去做首次接入</a>
+        </div>
+      </div>
+      <aside class="hero-side">
+        <div class="callout">
+          <div class="section-index">One Sentence</div>
+          <h3>GitHub 不是网盘，是可追踪的协作历史系统。</h3>
+          <p>它记录谁在什么时候基于哪个版本做了什么改动，并通过分支、PR 和 review 把多人工作组织起来。</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header">
+        <div>
+          <div class="section-index">Core Objects</div>
+          <h2 class="section-title-text">最核心的 8 个概念</h2>
+        </div>
+      </div>
+      <div class="grid-4">
+        <article class="card"><h3>Repository</h3><p>一个项目的代码仓库。包含代码、文档、提交历史、分支、标签、PR、Issue 等。</p></article>
+        <article class="card"><h3>Clone</h3><p>把远端仓库复制到本地电脑。之后你在本地写代码，再与远端同步。</p></article>
+        <article class="card"><h3>Branch</h3><p>并行开发线。你应该在自己的功能分支上工作，而不是直接改 <code>main</code>。</p></article>
+        <article class="card"><h3>Commit</h3><p>一次有边界的修改记录。好的 commit 让人能回看“这个改动到底干了什么”。</p></article>
+        <article class="card"><h3>Tag</h3><p>给某个稳定提交打上版本标签，例如 <code>v0.2.1</code>。在本课题组里，开发必须从明确 tag 开始。</p></article>
+        <article class="card"><h3>Push / Pull</h3><p><code>push</code> 是把本地分支传到远端；<code>pull</code> 是把远端最新变化拉回本地。</p></article>
+        <article class="card"><h3>Pull Request</h3><p>把一个分支的变更提交给目标分支审核。PR 是 review、讨论、CI 校验和合并的中心。</p></article>
+        <article class="card"><h3>Review</h3><p>别人检查你的改动是否正确、是否符合规范。对科研代码来说，review 是长期可维护性的核心。</p></article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header">
+        <div>
+          <div class="section-index">Mental Model</div>
+          <h2 class="section-title-text">用一条演化链理解 GitHub</h2>
+        </div>
+      </div>
+      <div class="timeline">
+        <article class="timeline-card"><div class="timeline-step">01</div><h3>仓库从稳定版本开始</h3><p>仓库有一个稳定版本，比如 <code>v0.1.0</code>。这不是装饰，而是协作基线。</p></article>
+        <article class="timeline-card"><div class="timeline-step">02</div><h3>每个人从基线拉出自己的分支</h3><p>这样不同成员的工作不会直接互相覆盖，彼此可以独立推进。</p></article>
+        <article class="timeline-card"><div class="timeline-step">03</div><h3>分支上的改动通过 commit 形成历史</h3><p>commit 把“正在做的事情”切成可解释、可回滚、可审查的单元。</p></article>
+        <article class="timeline-card"><div class="timeline-step">04</div><h3>通过 PR 进入集体审核</h3><p>PR 是把个人修改纳入团队标准流程的入口。</p></article>
+        <article class="timeline-card"><div class="timeline-step">05</div><h3>合并后形成新的稳定历史</h3><p>如果需要发版本，再更新 <code>VERSION</code>、<code>CHANGELOG</code> 并打新的 tag。</p></article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header">
+        <div>
+          <div class="section-index">Common Confusions</div>
+          <h2 class="section-title-text">最常见的概念混淆</h2>
+        </div>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Branch 不是仓库副本</h3>
+          <p>分支仍属于同一个仓库，只是同一历史上的不同开发线。你不需要为每个小功能新建一个仓库。</p>
+        </article>
+        <article class="card">
+          <h3>Commit 不是“保存一下”</h3>
+          <p>commit 应该代表一个可说明的改动单元。尤其在课题组治理里，commit 还要带版本基线信息。</p>
+        </article>
+        <article class="card">
+          <h3>Tag 不是 branch</h3>
+          <p>tag 是某个历史点的稳定标记，不是继续开发的活动线。所以正确做法是从 tag 开 branch。</p>
+        </article>
+        <article class="card">
+          <h3>PR 不是可有可无的形式</h3>
+          <p>PR 里集中了 review、讨论、CI 结果和 AI 使用说明。没有 PR，就失去了协作和审计上下文。</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>
+        <h3 class="footer-title">下一步</h3>
+        <p>如果你已经理解了这些概念，下一页应该去看“首次接入”或“成员协作”。</p>
+      </div>
+      <div class="badge-line">
+        <a class="button button-secondary" href="./setup.html">去首次接入</a>
+        <a class="button button-primary" href="./workflow.html">去成员协作</a>
+      </div>
+    </footer>
+  </div>
+  <script src="./site.js"></script>
+</body>
+</html>

@@ -15,6 +15,12 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
   - `docs/onboarding/40-faq.md`
 - Single-page teaching website for new members and new WSL onboarding:
   - `docs/site/index.html`
+- Multi-page teaching website expansion:
+  - `docs/site/basics.html`
+  - `docs/site/setup.html`
+  - `docs/site/workflow.html`
+  - `docs/site/agents.html`
+  - `docs/site/admin.html`
 - `scripts/onboarding-check.sh` for environment and access self-check.
 - `skills/governance-audit` skill package (audit workflow, policy reference, platform checker).
 - Weekly organization audit workflow: `.github/workflows/org-governance-audit-weekly.yml`.

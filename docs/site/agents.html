@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent | Ma-Lab2 教学站</title>
+  <meta name="description" content="Codex、codex cli、Claude Code、Cursor 在 Ma-Lab2 治理体系中的使用规范。">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="agents">
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-kicker">Ma-Lab2 Teaching Site</span><span class="brand-title">AI Agent</span></div>
+      <nav class="nav">
+        <a href="./index.html" data-page-link="home">首页</a>
+        <a href="./basics.html" data-page-link="basics">GitHub 基础</a>
+        <a href="./setup.html" data-page-link="setup">首次接入</a>
+        <a href="./workflow.html" data-page-link="workflow">成员协作</a>
+        <a href="./agents.html" data-page-link="agents">AI Agent</a>
+        <a href="./admin.html" data-page-link="admin">管理员</a>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="hero-main page-main" data-watermark="CODEX / CLAUDE / CURSOR / REVIEW">
+        <span class="page-chip">Agent Rules</span>
+        <h1 class="page-title">AI agent 可以提高效率，但不能绕过治理规则</h1>
+        <p class="page-lead">不管你用的是 Codex、codex cli、Claude Code 还是 Cursor，本质都一样：agent 运行在哪个环境，就继承哪个环境的 SSH、token 和仓库状态；最终改动仍然要走 branch、PR、review 和版本规则。</p>
+      </div>
+      <aside class="hero-side">
+        <div class="callout"><div class="section-index">Remember</div><h3>先判断 agent 跑在 WSL 还是 Windows</h3><p>这是所有认证问题的第一分水岭。不要在 Windows 终端里假设它能读取 WSL 的 <code>GH_TOKEN</code> 或 <code>~/.ssh</code>。</p></div>
+      </aside>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">Codex</div><h2 class="section-title-text">Codex / codex cli 接入</h2></div></div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>先确认命令和登录状态</h3>
+          <div class="code-wrap"><button class="copy-button" data-copy-target="ag-codex">复制</button><pre id="ag-codex"><code>command -v codex
+codex --version
+codex login</code></pre></div>
+          <p>如果这些都过不了，就不要先让 Codex 操作仓库。</p>
+        </article>
+        <article class="card">
+          <h3>再接治理 skill</h3>
+          <div class="code-wrap"><button class="copy-button" data-copy-target="ag-skill">复制</button><pre id="ag-skill"><code>./scripts/install-governance-audit-skill.sh
+
+# 在 Codex 中可触发
+$laser-plasma-github-governance
+$governance-audit</code></pre></div>
+          <p>让 agent 优先读取现有脚本和文档，不要凭空造新的治理流程。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">Cross-Tool Rules</div><h2 class="section-title-text">所有 agent 的共通规则</h2></div></div>
+      <div class="grid-3">
+        <article class="card"><h3>先跑环境检查</h3><p>先用 <code>./scripts/onboarding-check.sh</code> 确认 runtime、SSH、token 和仓库状态。</p></article>
+        <article class="card"><h3>先给 agent 明确目标</h3><p>例如让它“先检查 SSH 是否可用，再克隆治理仓库，再运行自检”，不要一句“帮我全部搞定”没有边界。</p></article>
+        <article class="card"><h3>先输出执行清单再执行</h3><p>对于新机器、生产仓库、组织治理这种高影响操作，先让 agent 列步骤，能减少误改配置的风险。</p></article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">PR Policy</div><h2 class="section-title-text">AI 改动也必须披露</h2></div></div>
+      <div class="grid-2">
+        <article class="card">
+          <ul>
+            <li><code>AI-Agent</code></li>
+            <li><code>AI-Assistance</code></li>
+            <li><code>Human-Review-Confirmed: yes</code></li>
+            <li><code>AI-Notes</code></li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>为什么需要人工确认</h3>
+          <p>因为 AI 可以加速实现，但不能替代对科学代码、版本兼容性和协作影响的最终判断。合并责任仍然在人类维护者身上。</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div><h3 class="footer-title">下一步</h3><p>如果 agent 已就位，就去成员协作页；如果你是维护者，就去管理员页。</p></div>
+      <div class="badge-line"><a class="button button-secondary" href="./workflow.html">去成员协作</a><a class="button button-primary" href="./admin.html">去管理员页</a></div>
+    </footer>
+  </div>
+  <script src="./site.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>成员协作 | Ma-Lab2 教学站</title>
+  <meta name="description" content="课题组普通成员如何在 GitHub 仓库中共同修改代码：tag、branch、Base-Version、push、PR 和 review。">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="workflow">
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-kicker">Ma-Lab2 Teaching Site</span><span class="brand-title">成员协作</span></div>
+      <nav class="nav">
+        <a href="./index.html" data-page-link="home">首页</a>
+        <a href="./basics.html" data-page-link="basics">GitHub 基础</a>
+        <a href="./setup.html" data-page-link="setup">首次接入</a>
+        <a href="./workflow.html" data-page-link="workflow">成员协作</a>
+        <a href="./agents.html" data-page-link="agents">AI Agent</a>
+        <a href="./admin.html" data-page-link="admin">管理员</a>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="hero-main page-main" data-watermark="FETCH / TAG / BRANCH / COMMIT / PR">
+        <span class="page-chip">Contributor Workflow</span>
+        <h1 class="page-title">在课题组仓库中共同修改代码的标准方法</h1>
+        <p class="page-lead">普通成员最重要的不是会多少 Git 命令，而是按正确顺序做正确的事：先同步 tags，再从标签开分支，commit 时带版本基线，push 自己的分支，最后通过 PR 合并。</p>
+      </div>
+      <aside class="hero-side">
+        <div class="callout">
+          <div class="section-index">Core Rule</div>
+          <h3>不要直接改 <code>main</code></h3>
+          <p>如果你有写权限，也不代表你应该直接推主分支。治理规则的设计就是为了避免多人同时破坏主线历史。</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">6 Steps</div><h2 class="section-title-text">普通成员 6 步法</h2></div></div>
+      <div class="timeline">
+        <article class="timeline-card"><div class="timeline-step">01</div><h3>同步 tags</h3><p>先拿到所有版本标签，否则你根本不知道自己基于哪个稳定版本开始工作。</p><div class="code-wrap"><button class="copy-button" data-copy-target="wf-fetch">复制</button><pre id="wf-fetch"><code>git fetch --tags --prune</code></pre></div></article>
+        <article class="timeline-card"><div class="timeline-step">02</div><h3>从明确 tag 开分支</h3><p>你必须知道自己是从 <code>vX.Y.Z</code> 的哪个稳定基线开始的，而不是直接基于某个飘忽不定的最新提交。</p><div class="code-wrap"><button class="copy-button" data-copy-target="wf-branch">复制</button><pre id="wf-branch"><code>./.governance/start-from-tag.sh vX.Y.Z feature/your-branch</code></pre></div></article>
+        <article class="timeline-card"><div class="timeline-step">03</div><h3>开发并本地测试</h3><p>在自己的分支上写代码、改文档、修 bug。不要把尚未整理的实验性修改直接推上去。</p></article>
+        <article class="timeline-card"><div class="timeline-step">04</div><h3>commit 时写 Base-Version</h3><p>每个 commit 都要明确写出它基于哪个版本开始，这样后续 review 和 release 才有依据。</p><div class="code-wrap"><button class="copy-button" data-copy-target="wf-commit">复制</button><pre id="wf-commit"><code>git add .
+git commit -m "your change summary" -m "Base-Version: vX.Y.Z"</code></pre></div></article>
+        <article class="timeline-card"><div class="timeline-step">05</div><h3>push 自己的分支</h3><p>推送的是你的功能分支，不是默认分支。</p><div class="code-wrap"><button class="copy-button" data-copy-target="wf-push">复制</button><pre id="wf-push"><code>git push origin feature/your-branch</code></pre></div></article>
+        <article class="timeline-card"><div class="timeline-step">06</div><h3>提 PR 并等待 review</h3><p>PR 里必须补齐治理字段，等 review 和 CI 全部通过后再合并。</p></article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">PR Fields</div><h2 class="section-title-text">PR 必填内容</h2></div></div>
+      <div class="grid-2">
+        <article class="card">
+          <ul>
+            <li><code>Base-Version</code></li>
+            <li><code>Change-Type</code></li>
+            <li><code>Target-Version</code></li>
+            <li><code>AI-Agent</code></li>
+            <li><code>AI-Assistance</code></li>
+            <li><code>Human-Review-Confirmed: yes</code></li>
+            <li><code>AI-Notes</code></li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>为什么要填这些</h3>
+          <p>因为多人维护时，最怕的是“谁也不知道这次改动基于哪个版本开始”“AI 改了多少没人说得清”“合并后版本应该往哪走没有共识”。这些字段就是为了解决这些问题。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">Common Failures</div><h2 class="section-title-text">最容易被拒的情况</h2></div></div>
+      <div class="grid-3">
+        <article class="card"><h3>缺 <code>Base-Version</code></h3><p>重新整理 commit message，补 trailer 后再 push。</p></article>
+        <article class="card"><h3>改了 <code>VERSION</code> 却没改 <code>CHANGELOG</code></h3><p>说明版本演化记录不完整，必须补齐。</p></article>
+        <article class="card"><h3>直接推默认分支</h3><p>这不是捷径，是破坏治理规则。正确做法永远是 branch + PR。</p></article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div><h3 class="footer-title">继续深入</h3><p>如果你要用 AI 辅助开发，下一页去看 AI Agent；如果你负责仓库治理，去看管理员页。</p></div>
+      <div class="badge-line"><a class="button button-secondary" href="./agents.html">去 AI Agent</a><a class="button button-primary" href="./admin.html">去管理员页</a></div>
+    </footer>
+  </div>
+  <script src="./site.js"></script>
+</body>
+</html>

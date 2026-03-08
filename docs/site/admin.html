@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理员 | Ma-Lab2 教学站</title>
+  <meta name="description" content="Ma-Lab2 课题组 GitHub 管理员页面：治理模板、分支保护、组织审计与毕业交接。">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="admin">
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-kicker">Ma-Lab2 Teaching Site</span><span class="brand-title">管理员</span></div>
+      <nav class="nav">
+        <a href="./index.html" data-page-link="home">首页</a>
+        <a href="./basics.html" data-page-link="basics">GitHub 基础</a>
+        <a href="./setup.html" data-page-link="setup">首次接入</a>
+        <a href="./workflow.html" data-page-link="workflow">成员协作</a>
+        <a href="./agents.html" data-page-link="agents">AI Agent</a>
+        <a href="./admin.html" data-page-link="admin">管理员</a>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="hero-main page-main" data-watermark="TEMPLATE / PROTECTION / AUDIT / HANDOVER">
+        <span class="page-chip">Admin Governance</span>
+        <h1 class="page-title">管理员的工作是把项目变成可接管系统</h1>
+        <p class="page-lead">管理员不只是“最后点 merge 的人”。你要保证仓库有治理模板、分支保护、required checks、版本与 changelog、至少两名维护者，以及毕业后的交接能力。</p>
+      </div>
+      <aside class="hero-side">
+        <div class="callout"><div class="section-index">Admin Goal</div><h3>核心不是短期跑起来，而是长期不断代</h3><p>如果一个项目只有一名学生知道怎么继续维护，它其实还没有达到课题组级别的治理标准。</p></div>
+      </aside>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">Repository Baseline</div><h2 class="section-title-text">新仓库初始化</h2></div></div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>安装治理模板</h3>
+          <div class="code-wrap"><button class="copy-button" data-copy-target="ad-template">复制</button><pre id="ad-template"><code>./scripts/apply-governance-template.sh /path/to/target-repo 0.2.1
+python3 .governance/update-skill-lock.py --skill-version 0.2.1</code></pre></div>
+        </article>
+        <article class="card">
+          <h3>替换占位符和建立初始版本</h3>
+          <p>至少更新 <code>OWNERS.yaml</code>、<code>CODEOWNERS</code>、<code>docs/HANDOVER.md</code>、<code>CONTRIBUTING.md</code>，并在仓库首次稳定后打 <code>v0.1.0</code> 标签。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">Branch Protection</div><h2 class="section-title-text">分支保护最小要求</h2></div></div>
+      <div class="grid-3">
+        <article class="card"><h3>禁止直接 push 默认分支</h3><p>哪怕成员有写权限，也应该通过 PR 合并，而不是直接往 <code>main</code> 写。</p></article>
+        <article class="card"><h3>至少 1 个 review approval</h3><p>把代码合并的决定从“谁手快”变成“谁审过”。</p></article>
+        <article class="card"><h3>required checks</h3><p><code>governance/validate-pr-fields</code> 和 <code>governance/validate-version</code> 至少要启用。</p></article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">Audit</div><h2 class="section-title-text">组织级审计</h2></div></div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>先看全量报告</h3>
+          <div class="code-wrap"><button class="copy-button" data-copy-target="ad-audit-1">复制</button><pre id="ad-audit-1"><code>./skills/governance-audit/scripts/run-org-audit.sh \
+  --org Ma-Lab2 \
+  --fail-on-blocker false</code></pre></div>
+        </article>
+        <article class="card">
+          <h3>修完后再阻断验证</h3>
+          <div class="code-wrap"><button class="copy-button" data-copy-target="ad-audit-2">复制</button><pre id="ad-audit-2"><code>./skills/governance-audit/scripts/run-org-audit.sh \
+  --org Ma-Lab2 \
+  --fail-on-blocker true</code></pre></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header"><div><div class="section-index">Handover</div><h2 class="section-title-text">毕业交接最小要求</h2></div></div>
+      <div class="grid-2">
+        <article class="card"><h3>至少两名维护者</h3><p>不能让项目只在单人脑子里运行。</p></article>
+        <article class="card"><h3>保留 <code>HANDOVER</code> 文档</h3><p>后续接手者要能知道运行方式、关键路径、版本状态和风险点。</p></article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div><h3 class="footer-title">管理员之后看什么</h3><p>如果你在带新人，回到首次接入页；如果要讲概念，回到 GitHub 基础页。</p></div>
+      <div class="badge-line"><a class="button button-secondary" href="./setup.html">去首次接入</a><a class="button button-primary" href="./basics.html">去 GitHub 基础</a></div>
+    </footer>
+  </div>
+  <script src="./site.js"></script>
+</body>
+</html>

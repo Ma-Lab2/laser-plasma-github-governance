@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首次接入 | Ma-Lab2 教学站</title>
+  <meta name="description" content="新成员和新 WSL 电脑的 GitHub 接入流程：账号注册、加入组织、SSH、Codex、治理仓库和 skill 安装。">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="setup">
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-kicker">Ma-Lab2 Teaching Site</span>
+        <span class="brand-title">首次接入</span>
+      </div>
+      <nav class="nav">
+        <a href="./index.html" data-page-link="home">首页</a>
+        <a href="./basics.html" data-page-link="basics">GitHub 基础</a>
+        <a href="./setup.html" data-page-link="setup">首次接入</a>
+        <a href="./workflow.html" data-page-link="workflow">成员协作</a>
+        <a href="./agents.html" data-page-link="agents">AI Agent</a>
+        <a href="./admin.html" data-page-link="admin">管理员</a>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="hero-main page-main" data-watermark="NEW ACCOUNT / NEW WSL / SSH / CODEX">
+        <span class="page-chip">New Member Setup</span>
+        <h1 class="page-title">给“新号 + 新 WSL 电脑”一条连续接入路径</h1>
+        <p class="page-lead">这页专门解决第一次接入课题组的现实问题：账号怎么注册、组织怎么加、WSL 里先装什么、SSH 怎么配、Codex 怎么验证、治理仓库怎么拉、skill 怎么装。</p>
+        <div class="page-actions">
+          <a class="button button-primary" href="#sequence">直接按步骤执行</a>
+          <a class="button button-secondary" href="./agents.html">如果你要先配 AI Agent</a>
+        </div>
+      </div>
+      <aside class="hero-side">
+        <div class="callout">
+          <div class="section-index">Do Not Skip</div>
+          <h3>不要先 clone 再补配置</h3>
+          <p>最常见的返工就是：没配 SSH 就开始 clone，没搞清楚 WSL 和 Windows 的环境差异就开始让 agent 帮忙。先把环境和认证做对，后面会省很多时间。</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel section" id="sequence">
+      <div class="section-header">
+        <div>
+          <div class="section-index">Sequence</div>
+          <h2 class="section-title-text">首次接入顺序</h2>
+        </div>
+      </div>
+      <div class="timeline">
+        <article class="timeline-card"><div class="timeline-step">01</div><h3>注册 GitHub</h3><p>使用常用邮箱注册账号，验证邮箱，建议开启双因素认证。</p></article>
+        <article class="timeline-card"><div class="timeline-step">02</div><h3>加入 <code>Ma-Lab2</code></h3><p>由管理员发组织邀请，你在邮箱或 GitHub 通知里接受。没有加入组织，就算知道仓库地址也可能没有访问权限。</p></article>
+        <article class="timeline-card"><div class="timeline-step">03</div><h3>进入 WSL，检查基础命令</h3><p>必须确认自己真正跑在 WSL 里，再检查 <code>git</code>、<code>python3</code>、<code>ssh</code>。</p><div class="code-wrap"><button class="copy-button" data-copy-target="setup-base">复制</button><pre id="setup-base"><code>uname -a
+command -v git
+command -v python3
+command -v ssh</code></pre></div></article>
+        <article class="timeline-card"><div class="timeline-step">04</div><h3>配置 SSH</h3><p>优先使用 SSH 进行日常 Git 传输。如果已有公钥，先检查是否已上传 GitHub；如果没有，再生成新的。</p><div class="code-wrap"><button class="copy-button" data-copy-target="setup-ssh">复制</button><pre id="setup-ssh"><code>ls -la ~/.ssh
+ssh-keygen -t ed25519 -C "your-github-email@example.com"
+cat ~/.ssh/id_ed25519.pub
+ssh -T git@github.com</code></pre></div></article>
+        <article class="timeline-card"><div class="timeline-step">05</div><h3>安装并验证 Codex / codex cli</h3><p>安装方式可能因机器不同而不同，但在组内协作前至少要确认命令存在、版本可读、可登录。</p><div class="code-wrap"><button class="copy-button" data-copy-target="setup-codex">复制</button><pre id="setup-codex"><code>command -v codex
+codex --version
+codex login</code></pre></div></article>
+        <article class="timeline-card"><div class="timeline-step">06</div><h3>用 SSH 克隆治理仓库</h3><p>治理仓库是课题组协作标准入口。不要先去业务仓库硬上手。</p><div class="code-wrap"><button class="copy-button" data-copy-target="setup-clone">复制</button><pre id="setup-clone"><code>git clone git@github.com:Ma-Lab2/laser-plasma-github-governance.git
+cd laser-plasma-github-governance</code></pre></div></article>
+        <article class="timeline-card"><div class="timeline-step">07</div><h3>运行自检并安装 skill</h3><p>先让脚本检测 runtime、SSH、token 和仓库状态，再安装审计 skill。</p><div class="code-wrap"><button class="copy-button" data-copy-target="setup-check">复制</button><pre id="setup-check"><code>./scripts/onboarding-check.sh --org Ma-Lab2 --repo laser-plasma-github-governance
+./scripts/install-governance-audit-skill.sh</code></pre></div></article>
+      </div>
+    </section>
+
+    <section class="panel section">
+      <div class="section-header">
+        <div>
+          <div class="section-index">Auth Split</div>
+          <h2 class="section-title-text">SSH 和 GH_TOKEN 的职责分工</h2>
+        </div>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>SSH：给 Git 日常传输</h3>
+          <ul>
+            <li><code>git clone</code></li>
+            <li><code>git pull</code></li>
+            <li><code>git push</code></li>
+          </ul>
+          <p>推荐在课题组日常协作中默认使用 SSH。</p>
+        </article>
+        <article class="card">
+          <h3>GH_TOKEN：给治理脚本和 API</h3>
+          <ul>
+            <li>组织审计</li>
+            <li>治理脚本</li>
+            <li>GitHub API 调用</li>
+          </ul>
+          <p>只在本机环境变量中配置，不要发给聊天里的 agent。</p>
+          <div class="code-wrap"><button class="copy-button" data-copy-target="setup-token">复制</button><pre id="setup-token"><code>source ~/.bash_profile
+echo ${GH_TOKEN:+SET}</code></pre></div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>
+        <h3 class="footer-title">接入完成后去哪</h3>
+        <p>如果你已经完成首次接入，下一页应该看“成员协作”或“AI Agent”。</p>
+      </div>
+      <div class="badge-line">
+        <a class="button button-secondary" href="./agents.html">去 AI Agent</a>
+        <a class="button button-primary" href="./workflow.html">去成员协作</a>
+      </div>
+    </footer>
+  </div>
+  <script src="./site.js"></script>
+</body>
+</html>

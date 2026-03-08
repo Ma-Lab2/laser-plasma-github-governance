@@ -6,7 +6,13 @@ Governance skill for Ma-Lab2 repositories.
 
 New members and admins should start from the onboarding guide:
 
-- Teaching web page: `docs/site/index.html`
+- Teaching web site:
+  - Home: `docs/site/index.html`
+  - GitHub basics: `docs/site/basics.html`
+  - First-time setup: `docs/site/setup.html`
+  - Member workflow: `docs/site/workflow.html`
+  - AI agents: `docs/site/agents.html`
+  - Admin governance: `docs/site/admin.html`
 - `docs/onboarding/00-start-here.md`
 - Member path: `docs/onboarding/10-member-path.md`
 - Admin path: `docs/onboarding/20-admin-path.md`
@@ -25,7 +31,7 @@ Before using the governance workflow, separate the two authentication jobs:
 - `GH_TOKEN` is required for governance scripts, organization audit, and GitHub API access
 
 Both `WSL` and `Windows native` shells are supported. The onboarding guide explains the correct setup path for each runtime.
-If you are onboarding a brand-new member or a new WSL machine, start with `docs/site/index.html`.
+If you are onboarding a brand-new member or a new WSL machine, start with `docs/site/setup.html`.
 
 ## What This Repository Provides
 

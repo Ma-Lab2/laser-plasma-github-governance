@@ -5,7 +5,10 @@
 
 如果你是第一次接触 GitHub、WSL、Codex，或者你在配置一台新的 WSL 电脑，先看完整教学网页：
 
-- `docs/site/index.html`
+- 首页：`docs/site/index.html`
+- GitHub 基础：`docs/site/basics.html`
+- 新成员首次接入：`docs/site/setup.html`
+- 成员协作流程：`docs/site/workflow.html`
 
 ## 你是谁
 

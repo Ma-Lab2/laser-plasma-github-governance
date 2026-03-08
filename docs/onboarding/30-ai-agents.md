@@ -7,7 +7,9 @@
 
 如果你在带一名新成员接入，或者要给一台新的 WSL 电脑完整配置 GitHub + Codex + SSH，先看：
 
-- `docs/site/index.html`
+- 首页：`docs/site/index.html`
+- 新成员首次接入：`docs/site/setup.html`
+- AI agent 专页：`docs/site/agents.html`
 
 ## 通用原则（所有客户端）
 
